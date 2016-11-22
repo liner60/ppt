@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>jq幻灯片</title>
+<script src="jquery-3.1.0.js"></script>
+<style>
+*{margin:0;padding:0;}
+ul{list-style:none;}
+.clearfix:after{display:block;content:'';clear:both;}
+.clearfix{zoom:1;}
+#imgBox{width:1000px;height:600px;margin:100px auto;position:relative;box-shadow:1px 1px 15px #ccc;}
+.imgList{width:100%;}
+.imgList li{position:absolute;top:0;left:0;width:100%;height:100%;}
+#imgBox .image{width:100%;height:100%;}
+#imgBox:hover .arr{display:block}
+.arr{color:#fff;font-size:50px;position:absolute;top:50%;margin-top:-25px;background:rgba(0,0,0,0.3);cursor:pointer;display:none;}
+.leftArr{left:0;}
+.rightArr{right:0;}
+#iconList{width:200px;height:20px;position:absolute;bottom:20px;left:50%;margin-left:-100px;}
+#iconList li{float:left;width:20px;height:20px;display:block;margin:0 10px;}
+#iconList .icon{width:100%;background:#fff;border:1px solid #ccc;border-radius:50%;display:block;height:20px;}
+#iconList  .active{background:#F00;}
+</style>
+</head>
+<body>
+<div id="imgBox">
+  <ul class="imgList">
+      <li><img src="img/1.jpg" class="image"></li>
+      <li><img src="img/2.jpg" class="image"></li>
+      <li><img src="img/3.jpg" class="image"></li>
+      <li><img src="img/4.jpg" class="image"></li>
+  </ul>
+  <span class="arr leftArr">&lt;</span>
+  <span class="arr rightArr">&gt;</span>
+  <ul id="iconList" class="clearfix">
+      <li><a href="###" class="icon"></a></li>
+      <li><a href="###" class="icon"></a></li>
+      <li><a href="###" class="icon"></a></li>
+      <li><a href="###" class="icon active"></a></li>
+  </ul>
+</div>
+<script>
+$(document).ready(function(){
+	var i=3;
+	$(".leftArr").click(function(){
+		$(".image").css("display","none");
+		$(".image").eq(i).css("display","block").fadeOut(1000);
+		if(i==0){
+			i=4;
+		}
+		$(".image").eq(i-1).fadeIn(1000).css("display","block");
+		$(".icon").removeClass("active");	
+		$(".icon").eq(i-1).addClass("active");
+		i--;
+	})
+	$(".rightArr").click(function(){
+		$(".image").css("display","none");
+		$(".image").eq(i).css("display","block").fadeOut(1000);
+		if(i==3){
+			i=-1;
+		}
+		$(".image").eq(i+1).fadeIn(1000).css("display","block");
+		$(".icon").removeClass("active");	
+		$(".icon").eq(i+1).addClass("active");	
+		i++;
+	})
+	$(".icon").click(function(){
+		//通过之前图标的活跃状态来获取之前元素的下标 同时让相应图片淡出
+		var list=$("#iconList").find(".icon");
+		for(var i=0;i<list.length;i++){
+			if(list.eq(i).hasClass("active")){
+				$(".imgList .image").eq(i).fadeOut(1000);
+			}
+		}
+		//淡出后让所有图标的类名移除活跃状态 同时让当前点击的图标设为活跃状态
+		$(".icon").removeClass("active");
+		$(this).addClass("active");
+		//获取到当前活跃状态的下标	
+		/*var index=$(".icon").index($(".icon").filter(function(){
+				return $(this).hasClass("active")
+		}))
+		//让相应图片淡入
+		$(".image").eq(index).fadeIn(1000).css("display","block");*/
+		for(var i=0;i<list.length;i++){
+			if(list.eq(i).hasClass("active")){
+				$(".imgList .image").eq(i).fadeIn(1000).css("display","block");
+			}
+		}	
+	})
+	var t=setInterval(function(){
+		$(".rightArr").trigger("click");
+	},2000);
+	$("#imgBox").mouseover(function(){
+		clearInterval(t);
+	})
+	$("#imgBox").mouseout(function(){
+		t=setInterval(function(){
+		  $(".rightArr").trigger("click");
+		},2000);
+	})
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+</script>
+</body>
+</html>
